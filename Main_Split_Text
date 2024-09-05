@@ -1,0 +1,27 @@
+content_lines = []
+collecting = False
+
+# Open the file and read line by line
+with open('file.txt', 'r') as file:
+    for line in file:
+        # Start collecting if 'Line 2 =' is found
+        if 'Line 2 =' in line:
+            # Start collecting from the part after '='
+            content_lines.append(line.split('=')[1].lstrip('“'))
+            collecting = True
+        elif collecting:
+            # Continue collecting lines until the closing quotation mark
+            if '”' in line:
+                content_lines.append(line.rstrip('”\n'))
+                break
+            else:
+                content_lines.append(line)
+
+# Join the collected lines into one string, keeping line breaks
+content_value = '\n'.join(content_lines)
+
+print(f'Extracted Content:\n{content_value}')
+
+# Save the extracted content into a config file
+with open('config.txt', 'w') as config_file:
+    config_file.write(f'Content={content_value}')
